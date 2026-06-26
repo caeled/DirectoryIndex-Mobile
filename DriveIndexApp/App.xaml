@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DriveIndexApp.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#7C3AED</Color>
+            <Color x:Key="PrimaryDark">#5B21B6</Color>
+            <Color x:Key="Background">#1E1E2E</Color>
+            <Color x:Key="Surface">#2A2A3E</Color>
+            <Color x:Key="TextPrimary">#F0F0F5</Color>
+            <Color x:Key="TextMuted">#888899</Color>
+
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="16,12"/>
+                <Setter Property="FontSize" Value="15"/>
+            </Style>
+
+            <Style x:Key="SecondaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource Surface}"/>
+                <Setter Property="TextColor" Value="{StaticResource TextPrimary}"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="16,12"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource TextPrimary}"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{StaticResource Surface}"/>
+                <Setter Property="TextColor" Value="{StaticResource TextPrimary}"/>
+                <Setter Property="PlaceholderColor" Value="{StaticResource TextMuted}"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

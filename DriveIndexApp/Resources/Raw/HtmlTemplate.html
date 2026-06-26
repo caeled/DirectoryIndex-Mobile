@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>__PAGE_TITLE__</title>
+  
+  <script>
+    // Global error boundary to capture and display any loading/parsing failures
+    window.addEventListener('error', function(event) {
+      setTimeout(function() {
+        const appEl = document.getElementById('app') || document.body;
+        if (appEl) {
+          appEl.innerHTML = `
+            <div class="max-w-xl mx-auto my-12 p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-2xl shadow-lg text-slate-800 dark:text-zinc-200">
+              <div class="flex items-center space-x-3 mb-4 text-red-600 dark:text-red-400">
+                <svg class="w-6.5 h-6.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h2 class="font-bold text-lg">Failed to Load Directory Index</h2>
+              </div>
+              <p class="text-sm text-red-700 dark:text-red-300 mb-4 font-semibold">${event.message || 'Unknown JavaScript Error'}</p>
+              <div class="text-xs text-slate-500 dark:text-zinc-400 mb-2 font-semibold">Error source:</div>
+              <p class="text-[11px] font-mono bg-white dark:bg-zinc-900/50 p-2 rounded border border-slate-200 dark:border-zinc-850 text-slate-600 dark:text-zinc-400 mb-4 max-w-full truncate">${event.filename || 'inline-script'} : line ${event.lineno || 'N/A'}</p>
+              <div class="text-xs text-slate-500 dark:text-zinc-400 mb-2 font-semibold">Troubleshooting:</div>
+              <ul class="list-disc pl-5 text-xs text-slate-600 dark:text-zinc-400 space-y-1">
+                <li>Make sure the generated index.html file was not truncated during generation.</li>
+                <li>Check your web browser console (F12) for more detailed error logs.</li>
+              </ul>
+            </div>
+          `;
+        }
+      }, 50);
+    });
+  </script>
+
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyberpunk: {
+              bg: '#000000',
+              text: '#00ffcc',
+              card: '#0a0a0c',
+              border: '#1f2937',
+              accent: '#ff007f'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.3);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.5);
+    }
+    
+    /* Play/Pause rotate animation for vinyl disc */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+      animation: spin 12s linear infinite;
+    }
+    .play-state-paused {
+      animation-play-state: paused !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-zinc-950 dark:text-zinc-100 min-h-screen transition-colors duration-200">
+
+  <!-- INJECTED PAYLOAD -->
+  <script>
+    // This variable will be overwritten by the PowerShell / Python scanner script
+    const embeddedFolderData = null;
+  </script>
+
+  <!-- Shell Container -->
+  <div id="app" class="flex flex-col min-h-screen">
+    <!-- Header Image -->
+    __HEADER_IMAGE__
+    <!-- Header -->
+    <header class="border-b border-slate-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        
+        <!-- Left: Logo & Title -->
+        <div class="flex items-center space-x-3 __HEADER_TITLE_CLASS__">
+          <div id="header-icon-container" class="p-2.5 rounded-xl bg-indigo-600 text-white shadow-md">
+            <!-- Dynamic Icon Inserts Here -->
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+            </svg>
+          </div>
+          <div>
+            <h1 id="folder-title" class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Directory Index</h1>
+            <p id="folder-path" class="text-xs text-slate-500 dark:text-zinc-400 font-mono">./</p>
+          </div>
+        </div>
+
+        <!-- Right: Toolbar / Actions -->
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Search (Optional) -->
+          
+          <div class="relative w-full sm:w-64">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            </span>
+            <input type="search" id="search-input" oninput="handleSearch(this.value)" placeholder="Search files..." class="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+          </div>
+          
+
+          <!-- Layout Selector -->
+          <div class="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden bg-white dark:bg-zinc-800 p-1">
+            <button onclick="setLayout('explorer')" id="btn-layout-explorer" class="p-1.5 rounded text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-700 transition" title="Table Explorer">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+            </button>
+            <button onclick="setLayout('audio')" id="btn-layout-audio" class="p-1.5 rounded text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-700 transition" title="Music Playlist">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+            </button>
+            <button onclick="setLayout('video')" id="btn-layout-video" class="p-1.5 rounded text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-700 transition" title="Video Grid">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+            </button>
+            <button onclick="setLayout('bookshelf')" id="btn-layout-bookshelf" class="p-1.5 rounded text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-700 transition" title="Bookshelf">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253" /></svg>
+            </button>
+            <button onclick="setLayout('gallery')" id="btn-layout-gallery" class="p-1.5 rounded text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-700 transition" title="Image Gallery">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            </button>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button onclick="toggleDarkMode()" class="p-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-700 transition" title="Toggle Dark Mode">
+            <svg id="sun-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" /></svg>
+            <svg id="moon-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      
+      <!-- Back to Parent Link -->
+      <div id="parent-link-container" class="mb-4 hidden">
+        <a href="../index.html" class="inline-flex items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline space-x-1">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+          <span>Back to Parent Directory</span>
+        </a>
+      </div>
+
+      <!-- Subfolders Section -->
+      <section id="folders-section" class="mb-8 hidden">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-zinc-500 mb-3" id="subfolders-count-label">Folders</h2>
+        <div id="folders-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <!-- Folders render here -->
+        </div>
+      </section>
+
+      <!-- Dynamic View Grid Container -->
+      <section id="view-container">
+        <!-- Rendered template view inserts here -->
+      </section>
+      
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-200 dark:border-zinc-900 py-6 text-center text-xs text-slate-400 dark:text-zinc-600 font-mono">
+      <p>Generated by Directory Index Generator &bull; Compiled Client-Side &bull; Developed by __AUTHOR_NAME__</p>
+    </footer>
+  </div>
+
+  <!-- Video Modal Lightbox -->
+  <div id="video-modal" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div class="relative w-full max-w-4xl bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
+      <div class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-900/50">
+        <h3 id="modal-video-title" class="text-sm font-bold text-white truncate max-w-[80%]">Video Player</h3>
+        <button onclick="closeVideoPlayer()" class="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-zinc-800 transition">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <div class="aspect-video bg-black flex items-center justify-center relative">
+        <video id="modal-video" controls class="w-full h-full max-h-[70vh]"></video>
+        
+        <!-- Custom Playback Helper view for non-native files -->
+        <div id="mkv-helper-view" class="absolute inset-0 bg-zinc-950/95 hidden flex-col items-center justify-center p-6 sm:p-10 text-center overflow-y-auto">
+          <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-full mb-3">
+            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h4 class="text-base font-bold text-white mb-2">Non-Native Video Format</h4>
+          <p class="text-xs text-zinc-400 max-w-md mb-6 leading-relaxed">
+            This video format (<span id="mkv-format-tag" class="font-mono font-bold text-amber-400 uppercase">MKV</span>) is not supported natively by web browsers. Since this file is on your computer, you can run it directly in your favorite media player (VLC, MPC-HC, PotPlayer, etc.) using one of the quick options below:
+          </p>
+          
+          <div class="w-full max-w-md space-y-4 text-left">
+            <!-- Method 0: Instant Direct Play (Recommended - Setup Once) -->
+            <div class="p-4 bg-zinc-900 border border-indigo-500/40 rounded-xl relative overflow-hidden">
+              <div class="absolute top-0 right-0 bg-indigo-600 text-white text-[8px] font-bold uppercase px-2 py-0.5 rounded-bl tracking-wider shadow">RECOMMENDED</div>
+              <span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-wider block mb-1">Method 1: Direct Play (Zero Clicks / No Downloads)</span>
+              <h5 class="text-xs font-bold text-zinc-100 mb-1">Play Instantly in Default Player</h5>
+              <p class="text-[10px] text-zinc-400 mb-3 leading-relaxed">
+                Setup once, then launch any video instantly in your default system player on click! Clicking "Instant Play" will ask your permission once, then play.
+              </p>
+              
+              <!-- Setup Guide -->
+              <div id="direct-play-setup-guide" class="mb-3 p-3 bg-zinc-950 border border-zinc-800 rounded-lg text-[10px] text-zinc-400 space-y-2 hidden">
+                <p class="font-bold text-indigo-400">One-Time Setup (Takes 5 seconds):</p>
+                <ol class="list-decimal list-inside space-y-1.5 pl-1">
+                  <li>Click <button onclick="downloadDirectPlaySetup()" class="text-indigo-400 hover:text-indigo-300 underline font-semibold cursor-pointer">Download Setup Script</button> to get <code class="bg-zinc-900 px-1 py-0.5 rounded text-white font-mono text-[9px]">setup-direct-play.bat</code>.</li>
+                  <li>Right-click the downloaded file and select <strong class="text-zinc-200">"Run as Administrator"</strong>.</li>
+                  <li>Press <span class="text-zinc-200">Yes / OK</span> to approve. That registers a safe custom <code class="text-white font-mono text-[9px] bg-zinc-900 px-1 py-0.5 rounded">play-local://</code> protocol on your PC!</li>
+                </ol>
+                <p class="text-[9px] text-zinc-500">After running it, you never have to repeat these steps. Every video will play with a single click!</p>
+              </div>
+
+              <div class="flex space-x-2">
+                <a id="mkv-direct-play-btn" href="#" class="flex-1 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer flex items-center justify-center gap-1.5">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  <span>Instant Play</span>
+                </a>
+                <button onclick="toggleDirectPlaySetupHelp()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-lg text-xs transition duration-150 cursor-pointer text-center" id="direct-play-setup-toggle-btn">
+                  Show Setup Guide
+                </button>
+              </div>
+              <div class="mt-3 flex items-center space-x-2">
+                <input id="auto-play-instant-checkbox" type="checkbox" onchange="toggleAutoPlayInstant(this)" class="w-3.5 h-3.5 rounded border-zinc-700 bg-zinc-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+                <label for="auto-play-instant-checkbox" class="text-[10px] text-zinc-400 select-none cursor-pointer hover:text-zinc-300">
+                  Automatically play instantly on click next time (Zero Clicks)
+                </label>
+              </div>
+            </div>
+
+            <!-- Method 1: Direct File Link -->
+            <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <span class="text-[10px] font-bold font-mono text-emerald-400 uppercase tracking-wider block mb-1">Method 1: Direct File Link (Easiest & Fastest)</span>
+              <h5 class="text-xs font-bold text-zinc-100 mb-1">Click to Open / Download Locally</h5>
+              <p class="text-[10px] text-zinc-500 mb-3">
+                Since this file is right next to this page, click below to open/download it instantly from your local disk. Once it appears in your browser's download shelf, click it to launch your default media player!
+                <br/><strong class="text-amber-400 font-medium">Tip:</strong> Click the arrow next to the download and check <span class="font-semibold text-white">"Always open files of this type"</span> to play it instantly on every click!
+              </p>
+              <a id="mkv-relative-file-link" href="#" class="w-full px-3 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer text-center block" download>
+                Play / Open File Natively
+              </a>
+            </div>
+
+            <!-- Method 2: VLC / Media Player Launcher -->
+            <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <span class="text-[10px] font-bold font-mono text-emerald-400 uppercase tracking-wider block mb-1">Method 2: VLC Playlist (.m3u) Force Launcher</span>
+              <h5 class="text-xs font-bold text-zinc-100 mb-1">Download & Click M3U Launcher</h5>
+              <p class="text-[10px] text-zinc-500 mb-3">
+                If the direct link doesn't trigger your media player, click below to download a tiny playlist file (<span class="font-mono font-semibold">.m3u</span>). When clicked, it will force-open your default physical media player (VLC, etc.) and stream the movie directly from your local drive path with zero lag!
+              </p>
+              <a id="mkv-direct-link" href="#" class="w-full px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer text-center block">
+                Launch VLC / Media Player (.m3u)
+              </a>
+              <div class="mt-3 flex items-center space-x-2">
+                <input id="auto-launch-checkbox" type="checkbox" onchange="toggleAutoLaunch(this)" class="w-3.5 h-3.5 rounded border-zinc-700 bg-zinc-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+                <label for="auto-launch-checkbox" class="text-[10px] text-zinc-400 select-none cursor-pointer hover:text-zinc-300">
+                  Automatically download & launch .m3u next time
+                </label>
+              </div>
+            </div>
+
+            <!-- Method 3: Open Directly from Folder -->
+            <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-wider block mb-1">Method 3: Double-click file in your folder</span>
+              <h5 class="text-xs font-bold text-zinc-100 mb-1">Open from your folder</h5>
+              <p class="text-[10px] text-zinc-500">
+                Since you generated this page in your local folder, the movie file is right next to this index.html file! Simply open your Windows folder and double-click the file to watch it instantly in your media player.
+              </p>
+            </div>
+
+            <!-- Method 3: Copy absolute path to play in system media player -->
+            <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <span class="text-[10px] font-bold font-mono text-zinc-500 uppercase tracking-wider block mb-1">Method 3: One-Click Windows Run</span>
+              <h5 class="text-xs font-bold text-zinc-100 mb-1">Play directly using Windows Run</h5>
+              <p class="text-[10px] text-zinc-500 mb-3">
+                Click copy below. Then press <kbd class="px-1 py-0.5 bg-zinc-950 rounded font-mono text-[9px] text-zinc-400 border border-zinc-800">Win + R</kbd> on Windows, paste it (<kbd class="px-1 py-0.5 bg-zinc-950 rounded font-mono text-[9px] text-zinc-400 border border-zinc-800">Ctrl + V</kbd>), and press <kbd class="px-1 py-0.5 bg-zinc-950 rounded font-mono text-[9px] text-zinc-400 border border-zinc-800">Enter</kbd> to launch your default player!
+              </p>
+              <div class="flex space-x-2">
+                <input id="mkv-filepath-input" type="text" readonly class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-zinc-400 select-all outline-none focus:border-indigo-500 transition" />
+                <button onclick="copyFilePath()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer min-w-[60px]" id="mkv-copy-path-btn">
+                  Copy
+                </button>
+              </div>
+            </div>
+            
+            <!-- Method 4: Copy stream URL -->
+            <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <span class="text-[10px] font-bold font-mono text-zinc-500 uppercase tracking-wider block mb-1">Method 4: VLC Network Stream</span>
+              <h5 class="text-xs font-bold text-zinc-100 mb-1">Stream to external player</h5>
+              <p class="text-[10px] text-zinc-500 mb-3">Copy this URL, open VLC, press <kbd class="px-1 py-0.5 bg-zinc-950 rounded font-mono text-[9px] text-zinc-400 border border-zinc-800">Ctrl + N</kbd>, and paste the link to stream.</p>
+              <div class="flex space-x-2">
+                <input id="mkv-stream-url" type="text" readonly class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-zinc-400 select-all outline-none focus:border-indigo-500 transition" />
+                <button onclick="copyStreamUrl()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer min-w-[60px]" id="copy-stream-btn">
+                  Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ebook Modal Lightbox -->
+  <div id="ebook-modal" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div class="relative w-full max-w-xl bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
+      <div class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-900/50">
+        <h3 id="modal-ebook-title" class="text-sm font-bold text-white truncate max-w-[80%]">Ebook Reader Launcher</h3>
+        <button onclick="closeEbookPlayer()" class="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-zinc-800 transition">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <div class="p-6 sm:p-8 flex flex-col items-center justify-center text-center overflow-y-auto max-h-[85vh]">
+        <div id="modal-ebook-icon-container" class="p-3 bg-indigo-500/10 text-indigo-400 rounded-full mb-3">
+          <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <h4 id="modal-ebook-subtitle" class="text-base font-bold text-white mb-2">Non-Native Format</h4>
+        <p id="ebook-description-text" class="text-xs text-zinc-400 max-w-md mb-6 leading-relaxed">
+          This ebook format (<span id="ebook-format-tag" class="font-mono font-bold text-amber-400 uppercase">EPUB</span>) is not supported natively by web browsers. Since this file is on your computer, you can launch it directly in your favorite reader (Calibre, Thorium, SumatraPDF, etc.) using one of the quick options below:
+        </p>
+        
+        <div class="w-full space-y-4 text-left">
+          <!-- Method 0: Instant Direct Play (Recommended - Setup Once) -->
+          <div class="p-4 bg-zinc-900 border border-indigo-500/40 rounded-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-indigo-600 text-white text-[8px] font-bold uppercase px-2 py-0.5 rounded-bl tracking-wider shadow">RECOMMENDED</div>
+            <span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-wider block mb-1">Method 1: Direct Open (Zero Clicks)</span>
+            <h5 id="ebook-method1-title" class="text-xs font-bold text-zinc-100 mb-1">Open Instantly in Default Ebook App</h5>
+            <p id="ebook-method1-desc" class="text-[10px] text-zinc-400 mb-3 leading-relaxed">
+              Setup once, then launch any ebook instantly in your default system reader on click! Clicking "Instant Open" will launch your book immediately.
+            </p>
+            
+            <!-- Setup Guide -->
+            <div id="ebook-direct-play-setup-guide" class="mb-3 p-3 bg-zinc-950 border border-zinc-800 rounded-lg text-[10px] text-zinc-400 space-y-2 hidden">
+              <p class="font-bold text-indigo-400">One-Time Setup (Takes 5 seconds):</p>
+              <ol class="list-decimal list-inside space-y-1.5 pl-1">
+                <li>If you haven't run the direct play setup yet, click <button onclick="downloadDirectPlaySetup()" class="text-indigo-400 hover:text-indigo-300 underline font-semibold cursor-pointer">Download Setup Script</button> to get <code class="bg-zinc-900 px-1 py-0.5 rounded text-white font-mono text-[9px]">setup-direct-play.bat</code>.</li>
+                <li>Right-click the downloaded file and select <strong class="text-zinc-200">"Run as Administrator"</strong>.</li>
+                <li>Press <span class="text-zinc-200">Yes / OK</span> to approve. That registers the safe custom <code class="text-white font-mono text-[9px] bg-zinc-900 px-1 py-0.5 rounded">play-local://</code> protocol on your PC!</li>
+              </ol>
+              <p class="text-[9px] text-zinc-500">After running it, you never have to repeat these steps. Every video and ebook will launch with a single click!</p>
+            </div>
+
+            <div class="flex space-x-2">
+              <a id="ebook-direct-play-btn" href="#" class="flex-1 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer flex items-center justify-center gap-1.5">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span>Instant Open</span>
+              </a>
+              <button onclick="toggleEbookDirectPlaySetupHelp()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-lg text-xs transition duration-150 cursor-pointer text-center" id="ebook-direct-play-setup-toggle-btn">
+                Show Setup Guide
+              </button>
+            </div>
+            <div class="mt-3 flex items-center space-x-2">
+              <input id="auto-read-instant-checkbox" type="checkbox" onchange="toggleAutoReadInstant(this)" class="w-3.5 h-3.5 rounded border-zinc-700 bg-zinc-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+              <label id="ebook-auto-checkbox-label" for="auto-read-instant-checkbox" class="text-[10px] text-zinc-400 select-none cursor-pointer hover:text-zinc-300">
+                Automatically open ebooks instantly on click next time (Zero Clicks)
+              </label>
+            </div>
+          </div>
+
+          <!-- Method: Google Drive or Office Online Viewer -->
+          <div id="office-online-container" class="p-4 bg-zinc-900 border border-emerald-500/40 rounded-xl hidden">
+            <span class="text-[10px] font-bold font-mono text-emerald-400 uppercase tracking-wider block mb-1">Method 1.5: Cloud Viewer (No Downloads)</span>
+            <h5 id="office-online-title" class="text-xs font-bold text-zinc-100 mb-1">Open in Browser using Office/Google Viewer</h5>
+            <p class="text-[10px] text-zinc-400 mb-3 leading-relaxed">
+              Since you are browsing online, you can view this file directly inside your browser without downloading!
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <a id="office-online-btn" href="#" target="_blank" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer text-center flex-1">
+                Open in Office 365 Viewer
+              </a>
+              <a id="google-docs-online-btn" href="#" target="_blank" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer text-center flex-1">
+                Open in Google Docs Viewer
+              </a>
+            </div>
+          </div>
+          
+          <div id="gdrive-open-container" class="p-4 bg-zinc-900 border border-blue-500/40 rounded-xl hidden">
+            <span class="text-[10px] font-bold font-mono text-blue-400 uppercase tracking-wider block mb-1">Google Workspace Direct Link</span>
+            <h5 class="text-xs font-bold text-zinc-100 mb-1">Open in Google Workspace / Drive</h5>
+            <p class="text-[10px] text-zinc-400 mb-3 leading-relaxed">
+              This is a Google Drive document. You can open and edit it directly inside Google Workspace (Docs, Sheets, Slides) in a new tab!
+            </p>
+            <a id="gdrive-open-btn" href="#" target="_blank" class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer text-center block">
+              Open in Google Workspace
+            </a>
+          </div>
+
+          <!-- Method 1: Direct File Link -->
+          <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+            <span class="text-[10px] font-bold font-mono text-emerald-400 uppercase tracking-wider block mb-1">Method 2: Direct File Link (Easiest & Fastest)</span>
+            <h5 class="text-xs font-bold text-zinc-100 mb-1">Click to Open / Download Locally</h5>
+            <p class="text-[10px] text-zinc-500 mb-3">
+              Since this file is right next to this page, click below to open/download it instantly from your local disk. Once it appears in your browser's download shelf, click it to launch your default reader!
+              <br/><strong class="text-amber-400 font-medium">Tip:</strong> Click the arrow next to the download and check <span class="font-semibold text-white">"Always open files of this type"</span> to play it instantly on every click!
+            </p>
+            <a id="ebook-relative-file-link" href="#" class="w-full px-3 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer text-center block" download>
+              Open File Natively
+            </a>
+          </div>
+
+          <!-- Method 2: Double-click file in your folder -->
+          <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+            <span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-wider block mb-1">Method 3: Double-click file in your folder</span>
+            <h5 class="text-xs font-bold text-zinc-100 mb-1">Open from your folder</h5>
+            <p class="text-[10px] text-zinc-500">
+              Since you generated this page in your local folder, the ebook file is right next to this index.html file! Simply open your Windows folder and double-click the file to open it instantly.
+            </p>
+          </div>
+
+          <!-- Method 3: Copy absolute path to play in system media player -->
+          <div class="p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+            <span class="text-[10px] font-bold font-mono text-zinc-500 uppercase tracking-wider block mb-1">Method 4: One-Click Windows Run</span>
+            <h5 class="text-xs font-bold text-zinc-100 mb-1">Open directly using Windows Run</h5>
+            <p class="text-[10px] text-zinc-500 mb-3">
+              Click copy below. Then press <kbd class="px-1 py-0.5 bg-zinc-950 rounded font-mono text-[9px] text-zinc-400 border border-zinc-800">Win + R</kbd> on Windows, paste it (<kbd class="px-1 py-0.5 bg-zinc-950 rounded font-mono text-[9px] text-zinc-400 border border-zinc-800">Ctrl + V</kbd>), and press <kbd class="px-1 py-0.5 bg-zinc-950 rounded font-mono text-[9px] text-zinc-400 border border-zinc-800">Enter</kbd> to launch your default reader!
+            </p>
+            <div class="flex space-x-2">
+              <input id="ebook-filepath-input" type="text" readonly class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-zinc-400 select-all outline-none focus:border-indigo-500 transition" />
+              <button onclick="copyEbookFilePath()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-white font-semibold rounded-lg text-xs transition duration-150 cursor-pointer min-w-[60px]" id="ebook-copy-path-btn">
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Lightbox -->
+  <div id="img-lightbox" class="fixed inset-0 z-50 bg-black/95 hidden items-center justify-center flex-direction:column" onclick="if(event.target===this)closeImgLightbox()">
+    <button onclick="closeImgLightbox()" class="absolute top-4 right-5 text-4xl text-zinc-400 hover:text-red-400 bg-none border-none cursor-pointer leading-none" style="background:none;border:none;">&times;</button>
+    <button onclick="shiftImgLightbox(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 text-4xl text-zinc-400 hover:text-white px-4 py-2 rounded-lg bg-zinc-800/70 hover:bg-indigo-600/60 border-none cursor-pointer" style="border:none;">&#8249;</button>
+    <img id="img-lb-img" src="" alt="" style="max-width:90vw;max-height:82vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 48px rgba(0,0,0,.8);display:block;">
+    <button onclick="shiftImgLightbox(1)" class="absolute right-3 top-1/2 -translate-y-1/2 text-4xl text-zinc-400 hover:text-white px-4 py-2 rounded-lg bg-zinc-800/70 hover:bg-indigo-600/60 border-none cursor-pointer" style="border:none;">&#8250;</button>
+    <div id="img-lb-caption" class="text-zinc-400 text-xs mt-3 text-center max-w-2xl truncate"></div>
+    <a id="img-lb-open" href="#" target="_blank" class="text-indigo-400 text-xs mt-1 hover:underline">&#8599; Open full size</a>
+  </div>
+
+  <!-- RENDER & TEMPLATE SYSTEM -->
+  <script>
+    // Theme setup from config
+    const configTheme = 'emerald';
+    let currentLayout = 'auto';
+    let searchQuery = '';
+    
+    // Default mock data in case embeddedFolderData is null (used during offline tests)
+    const mockFolderData = {
+      name: "Index Preview",
+      path: "./",
+      subfolders: ["Documents", "Music", "Movies", "Ebooks"],
+      files: [
+        { name: "My Favorite Song.mp3", path: "My Favorite Song.mp3", size: 5420000, type: "audio", extension: "mp3" },
+        { name: "Podcast Interview.wav", path: "Podcast Interview.wav", size: 45000000, type: "audio", extension: "wav" },
+        { name: "Nature Documentary.mp4", path: "Nature Documentary.mp4", size: 345000000, type: "video", extension: "mp4" },
+        { name: "React Tutorial.mkv", path: "React Tutorial.mkv", size: 1200000000, type: "video", extension: "mkv" },
+        { name: "Clean Code Handbook.epub", path: "Clean Code Handbook.epub", size: 4200000, type: "epub", extension: "epub" },
+        { name: "Design Patterns Guide.pdf", path: "Design Patterns Guide.pdf", size: 12400000, type: "epub", extension: "pdf" },
+        { name: "Financial Report.xlsx", path: "Financial Report.xlsx", size: 180000, type: "document", extension: "xlsx" },
+        { name: "System Architecture.png", path: "System Architecture.png", size: 1200000, type: "image", extension: "png" }
+      ]
+    };
+
+    // Get active directory data safely (handles cases where embeddedFolderData failed to parse or define)
+    let folderData = mockFolderData;
+    try {
+      if (typeof embeddedFolderData !== 'undefined' && embeddedFolderData !== null) {
+        folderData = embeddedFolderData;
+      }
+    } catch (e) {
+      console.warn("Could not load embeddedFolderData, falling back to mock:", e);
+    }
+
+    // Normalize folderData to handle PowerShell ConvertTo-Json single-item or null array gotchas
+    if (folderData) {
+      if (!folderData.files) {
+        folderData.files = [];
+      } else if (!Array.isArray(folderData.files)) {
+        folderData.files = [folderData.files];
+      }
+      
+      if (!folderData.subfolders) {
+        folderData.subfolders = [];
+      } else if (!Array.isArray(folderData.subfolders)) {
+        folderData.subfolders = [folderData.subfolders];
+      }
+    }
+
+    // State Variables
+    let audioTracks = [];
+    let currentAudioTrackIndex = -1;
+    let isAudioPlaying = false;
+    let mainAudio = null;
+    let activeModalFileName = '';
+
+    // Calculate absolute file system path of a file
+    function getAbsoluteSystemPath(fileName) {
+      const file = folderData.files.find(f => f.name === fileName);
+      if (!file) return fileName;
+      
+      if (window.location.protocol === 'file:') {
+        let dirUrl = window.location.href;
+        if (dirUrl.endsWith('/index.html')) {
+          dirUrl = dirUrl.substring(0, dirUrl.length - 11);
+        } else {
+          dirUrl = dirUrl.substring(0, dirUrl.lastIndexOf('/'));
+        }
+        
+        let decodedDir = decodeURIComponent(dirUrl);
+        let sysPath = decodedDir;
+        
+        if (sysPath.startsWith('file:///')) {
+          let winCheck = decodedDir.substring(8);
+          if (/^[a-zA-Z]:/.test(winCheck)) {
+            sysPath = winCheck;
+          } else {
+            sysPath = decodedDir.substring(7);
+          }
+        } else if (sysPath.startsWith('file://')) {
+          sysPath = sysPath.substring(7);
+        }
+        
+        const isWindows = /^[a-zA-Z]:/.test(sysPath);
+        if (isWindows) {
+          sysPath = sysPath.split('/').join('\\');
+          return sysPath + '\\' + file.name;
+        } else {
+          return sysPath + '/' + file.name;
+        }
+      }
+      return new URL(file.path, window.location.href).href;
+    }
+
+    function copyFilePath() {
+      const input = document.getElementById('mkv-filepath-input');
+      const btn = document.getElementById('mkv-copy-path-btn');
+      if (input) {
+        input.select();
+        navigator.clipboard.writeText(input.value).then(() => {
+          if (btn) {
+            btn.textContent = 'Copied!';
+            btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+            btn.classList.add('bg-green-600', 'hover:bg-green-700');
+            setTimeout(() => {
+              btn.textContent = 'Copy';
+              btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+              btn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+            }, 2000);
+          }
+        }).catch(err => {
+          console.error('Failed to copy file path', err);
+        });
+      }
+    }
+
+    // Helper to asynchronously obtain a playable URL (supports local previewUrl and Google Drive auth API)
+    async function getPlayableUrl(file) {
+      if (!file) return '';
+      
+      // 1. If it's a local drag-and-drop file with a memory Blob URL, use it directly!
+      if (file.previewUrl) {
+        return file.previewUrl;
+      }
+      
+      // 2. If it is a Google Drive file, we have an ID and an active access token
+      const accessToken = folderData.gdriveAccessToken;
+      if (file.id && accessToken) {
+        if (file._gdriveBlobUrl) {
+          return file._gdriveBlobUrl;
+        }
+        
+        console.log("Downloading private Google Drive resource...", file.name);
+        try {
+          const res = await fetch('https://www.googleapis.com/drive/v3/files/' + file.id + '?alt=media', {
+            headers: { 'Authorization': 'Bearer ' + accessToken }
+          });
+          if (!res.ok) {
+            throw new Error('Status ' + res.status + ': ' + res.statusText);
+          }
+          const blob = await res.blob();
+          const objectUrl = URL.createObjectURL(blob);
+          file._gdriveBlobUrl = objectUrl; // Cache the generated Object URL
+          return objectUrl;
+        } catch (e) {
+          console.error("Failed to fetch Google Drive file as blob, falling back to path", e);
+        }
+      }
+      
+      // 3. Fallback to standard relative path for offline computer folder playback
+      return file.path;
+    }
+
+    // Synchronously check if a file can be played/resolved immediately (local/cached)
+    function getPlayableUrlSync(file) {
+      if (!file) return '';
+      if (file.previewUrl) return file.previewUrl;
+      const accessToken = folderData.gdriveAccessToken;
+      if (file.id && accessToken) {
+        if (file._gdriveBlobUrl) return file._gdriveBlobUrl;
+        return null; // Must be downloaded asynchronously
+      }
+      return file.path;
+    }
+
+    async function openFile(fileName) {
+      try {
+        const file = folderData.files.find(f => f.name === fileName);
+        if (!file) return;
+        
+        if (file.type === 'video') {
+          playVideo(fileName);
+          return;
+        }
+
+        const ext = (file.extension || '').toLowerCase();
+        
+        // Define list of native web-browser supported file extensions
+        const nativeExts = ['mp4', 'webm', 'ogg', 'mp3', 'wav', 'm4a', 'aac', 'flac', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'pdf', 'txt', 'html', 'htm', 'xml', 'json', 'css', 'js', 'ts'];
+        const isNative = nativeExts.includes(ext);
+        const isGoogleDoc = file.id && (!ext || ['gdoc', 'gsheet', 'gslides'].includes(ext));
+        
+        if (!isNative || isGoogleDoc) {
+          openEbook(fileName);
+          return;
+        }
+
+        const syncUrl = getPlayableUrlSync(file);
+        if (syncUrl !== null) {
+          // Standard browser behavior for local file (avoids pop-up block)
+          window.open(syncUrl, '_blank');
+          return;
+        }
+
+        // Google Drive file needs async download. Open a tab synchronously first to bypass popup blocker!
+        const newTab = window.open('', '_blank');
+        if (newTab) {
+          newTab.document.title = "Loading " + fileName + "...";
+          newTab.document.body.innerHTML = `
+            <div style="font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #0D0F12; color: #fff;">
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 10px;">Retrieving from Google Drive...</div>
+              <div style="font-size: 11px; color: rgba(255,255,255,0.4);">Please wait while your file is downloaded.</div>
+            </div>
+          `;
+        }
+        
+        const playableUrl = await getPlayableUrl(file);
+        if (playableUrl && newTab) {
+          newTab.location.href = playableUrl;
+        } else if (newTab) {
+          newTab.close();
+        }
+      } catch (e) {
+        console.error("Failed to open file:", e);
+      }
+    }
+
+    async function downloadFile(fileName) {
+      try {
+        const file = folderData.files.find(f => f.name === fileName);
+        if (!file) return;
+        const playableUrl = await getPlayableUrl(file);
+        
+        const a = document.createElement('a');
+        a.href = playableUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (e) {
+        console.error("Failed to download file:", e);
+      }
+    }
+
+    // SVGs Helpers
+    const icons = {
+      folder: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>`,
+      audio: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>`,
+      video: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>`,
+      epub: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`,
+      document: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>`,
+      image: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+      other: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>`
+    };
+
+    // Format size helper
+    function formatBytes(bytes) {
+      if (!bytes || bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    // Auto-detect template based on file content ratios
+    function detectTemplate(files) {
+      if (!files || files.length === 0) return 'explorer';
+      const counts = { audio: 0, video: 0, epub: 0, image: 0 };
+      files.forEach(f => {
+        if (f.type === 'audio') counts.audio++;
+        if (f.type === 'video') counts.video++;
+        if (f.type === 'epub' || ['pdf', 'epub', 'mobi', 'azw', 'azw3', 'djvu'].includes((f.extension || '').toLowerCase())) counts.epub++;
+        if (f.type === 'image') counts.image++;
+      });
+
+      const total = files.length;
+      if (counts.audio / total > 0.4) return 'audio';
+      if (counts.video / total > 0.4) return 'video';
+      if (counts.epub / total > 0.4) return 'bookshelf';
+      if (counts.image / total > 0.4) return 'gallery';
+      return 'explorer';
+    }
+
+    // Theme Class Changer
+    function applySelectedTheme(theme) {
+      const html = document.documentElement;
+      
+      // Default classes clear
+      html.className = '';
+      
+      if (theme === 'dark' || theme === 'cyberpunk' || theme === 'indigo') {
+        html.classList.add('dark');
+      }
+      
+      if (theme === 'cyberpunk') {
+        document.body.className = "bg-black text-cyan-400 min-h-screen font-mono";
+      } else {
+        document.body.className = "bg-slate-50 text-slate-900 dark:bg-zinc-950 dark:text-zinc-100 min-h-screen font-sans antialiased transition-colors duration-200";
+      }
+    }
+
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        try {
+          localStorage.setItem('dark-mode', 'light');
+        } catch (e) {}
+      } else {
+        html.classList.add('dark');
+        try {
+          localStorage.setItem('dark-mode', 'dark');
+        } catch (e) {}
+      }
+    }
+
+    // Book Cover Generator
+    function generateBookCover(title) {
+      let hash = 0;
+      for (let i = 0; i < title.length; i++) {
+        hash = title.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const h = Math.abs(hash) % 360;
+      const color1 = 'hsl(' + h + ', 60%, 40%)';
+      const color2 = 'hsl(' + ((h + 120) % 360) + ', 70%, 20%)';
+      const cleanTitle = title.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+      const initials = cleanTitle.slice(0, 2).toUpperCase();
+
+      return `
+        <div class="relative w-full aspect-[2/3] rounded-lg shadow-md overflow-hidden flex flex-col justify-between p-4 text-white" style="background: linear-gradient(135deg, ${color1}, ${color2})">
+          <div class="absolute inset-0 bg-white opacity-[0.03] pointer-events-none"></div>
+          <div class="border-t border-l border-white/20 pt-1 pl-1 text-[8px] font-semibold tracking-wider opacity-80 uppercase">LIBRARY</div>
+          <div class="my-auto text-center">
+            <div class="text-2xl font-serif font-bold opacity-30 mb-1">${initials}</div>
+            <div class="text-xs font-serif font-bold line-clamp-3 leading-snug tracking-tight px-1">${cleanTitle}</div>
+          </div>
+          <div class="flex justify-between items-end border-t border-white/20 pt-2 text-[8px] opacity-60 font-mono">
+            <span>BOOK</span>
+            ${icons.epub}
+          </div>
+        </div>
+      `;
+    }
+
+    // RENDER CONTROLLER
+    function renderApp() {
+      // Set titles
+      document.getElementById('folder-title').textContent = folderData.name || 'Directory Index';
+      document.getElementById('folder-path').textContent = folderData.path || './';
+
+      // Back to parent directory handler
+      if (folderData.path && folderData.path !== '.' && folderData.path !== './') {
+        document.getElementById('parent-link-container').classList.remove('hidden');
+      }
+
+      // Render Folders List
+      const foldersSection = document.getElementById('folders-section');
+      const foldersGrid = document.getElementById('folders-grid');
+      
+      if (folderData.subfolders && folderData.subfolders.length > 0) {
+        foldersSection.classList.remove('hidden');
+        document.getElementById('subfolders-count-label').textContent = 'Folders (' + folderData.subfolders.length + ')';
+        foldersGrid.innerHTML = folderData.subfolders.map(sub => `
+          <a href="${sub}/index.html" class="flex items-center space-x-3 p-3 rounded-xl border border-slate-200 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900/50 hover:shadow-sm transition group duration-200">
+            <div class="p-2 rounded-lg bg-indigo-500/10 text-indigo-500 group-hover:scale-105 transition duration-200">
+              ${icons.folder}
+            </div>
+            <div class="truncate">
+              <div class="text-sm font-semibold truncate group-hover:text-indigo-500 transition">${sub}</div>
+              <div class="text-[10px] text-slate-400 dark:text-zinc-500 font-mono">Folder</div>
+            </div>
+          </a>
+        `).join('');
+      } else {
+        foldersSection.classList.add('hidden');
+      }
+
+      // Layout Detection
+      let activeLayout = currentLayout;
+      if (activeLayout === 'auto') {
+        activeLayout = detectTemplate(folderData.files);
+      }
+
+      // Sync Toolbar active states
+      const layouts = ['explorer', 'audio', 'video', 'bookshelf', 'gallery'];
+      layouts.forEach(l => {
+        const btn = document.getElementById('btn-layout-' + l);
+        if (btn) {
+          if (l === activeLayout) {
+            btn.className = "p-1.5 rounded bg-indigo-100 dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 font-semibold";
+          } else {
+            btn.className = "p-1.5 rounded text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-700 transition";
+          }
+        }
+      });
+
+      // Update Header Accent Icon
+      const headerIconContainer = document.getElementById('header-icon-container');
+      if (headerIconContainer) {
+        headerIconContainer.innerHTML = icons[activeLayout === 'bookshelf' ? 'epub' : activeLayout] || icons.folder;
+      }
+
+      // Render view container
+      const container = document.getElementById('view-container');
+      const filteredFiles = folderData.files.filter(f => 
+        f.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      if (activeLayout === 'audio') {
+        renderAudioPlaylist(container, filteredFiles);
+      } else if (activeLayout === 'video') {
+        renderVideoGrid(container, filteredFiles);
+      } else if (activeLayout === 'bookshelf') {
+        renderBookshelfGrid(container, filteredFiles);
+      } else if (activeLayout === 'gallery') {
+        renderImageGallery(container, filteredFiles);
+      } else {
+        renderExplorerTable(container, filteredFiles);
+      }
+    }
+
+    // Layout Setters
+    function setLayout(layout) {
+      currentLayout = layout;
+      renderApp();
+    }
+
+    function handleSearch(val) {
+      searchQuery = val;
+      renderApp();
+    }
+
+    // === EXPLORER VIEW ===
+    function renderExplorerTable(container, files) {
+      if (files.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 border border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl">
+            <p class="text-slate-400 dark:text-zinc-500">No files found matching search.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 rounded-2xl overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+                  <th class="px-6 py-4">Name</th>
+                  <th class="px-6 py-4 w-32">Type</th>
+                  <th class="px-6 py-4 w-32">Size</th>
+                  <th class="px-6 py-4 w-28 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-zinc-850">
+                ${files.map(file => `
+                  <tr class="hover:bg-slate-50/50 dark:hover:bg-zinc-800/10 transition duration-150 group">
+                    <td class="px-6 py-3.5">
+                      <div class="flex items-center space-x-3 truncate max-w-2xl">
+                        <div class="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 group-hover:bg-indigo-500/10 group-hover:text-indigo-500 transition duration-150">
+                          ${icons[file.type] || icons.other}
+                        </div>
+                        <span class="text-sm font-semibold truncate group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition">${file.name}</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-3.5 text-xs font-mono capitalize text-slate-500 dark:text-zinc-400">${file.type}</td>
+                    <td class="px-6 py-3.5 text-xs font-mono text-slate-500 dark:text-zinc-400">${formatBytes(file.size)}</td>
+                    <td class="px-6 py-3.5 text-right whitespace-nowrap">
+                      <div class="flex items-center justify-end space-x-2">
+                        <button onclick="openFile('${file.name}')" class="p-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-50 dark:hover:bg-zinc-800 transition cursor-pointer" title="Open Book/Media">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                        </button>
+                        <button onclick="downloadFile('${file.name}')" class="p-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-50 dark:hover:bg-zinc-800 transition cursor-pointer" title="Download">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // === AUDIO VIEW ===
+    function renderAudioPlaylist(container, files) {
+      const audioFiles = files.filter(f => f.type === 'audio');
+      audioTracks = audioFiles;
+
+      if (audioFiles.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 border border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl">
+            <p class="text-slate-400 dark:text-zinc-500">No audio files found.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Audio Player Block -->
+          <div class="lg:col-span-1">
+            <div class="sticky top-24 border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-sm flex flex-col items-center">
+              
+              <!-- Vinyl disc -->
+              <div class="relative w-40 h-40 rounded-full shadow-lg border-4 border-slate-100 dark:border-zinc-800 flex items-center justify-center bg-zinc-950 overflow-hidden group mb-6">
+                <div class="absolute inset-4 rounded-full border border-zinc-700/40 bg-zinc-900 flex items-center justify-center animate-spin-slow play-state-paused" id="vinyl-disc">
+                  <!-- Vinyl Grooves -->
+                  <div class="absolute inset-0 rounded-full opacity-30" style="background: repeating-radial-gradient(circle, #000, #000 2px, #1a1a1a 4px);"></div>
+                  <!-- Center sticker -->
+                  <div class="w-16 h-16 rounded-full bg-indigo-600 border border-zinc-800 flex items-center justify-center z-10 overflow-hidden" id="vinyl-cover-container">
+                    <div class="w-4 h-4 rounded-full bg-zinc-950"></div>
+                  </div>
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center text-white/5 group-hover:text-white/10 transition pointer-events-none">
+                  ${icons.audio}
+                </div>
+              </div>
+
+              <!-- Track Meta -->
+              <div class="text-center w-full mb-6">
+                <h3 class="text-base font-bold truncate px-2" id="player-title">No Track Selected</h3>
+                <p class="text-xs text-slate-400 dark:text-zinc-500 font-mono mt-1" id="player-size">--</p>
+              </div>
+
+              <!-- Custom Player UI -->
+              <div class="w-full space-y-4">
+                <div class="flex items-center space-x-2 text-xs font-mono">
+                  <span id="player-time-current">0:00</span>
+                  <input type="range" id="player-progress" min="0" max="100" value="0" class="flex-1 accent-indigo-600 dark:accent-indigo-400 h-1 rounded-lg bg-slate-200 dark:bg-zinc-700 cursor-pointer">
+                  <span id="player-time-duration">0:00</span>
+                </div>
+
+                <div class="flex items-center justify-center space-x-5">
+                  <button onclick="playPrev()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 transition">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6L18 18V6z"/></svg>
+                  </button>
+                  <button onclick="togglePlay()" class="p-4 rounded-full bg-indigo-600 text-white shadow hover:bg-indigo-700 active:scale-95 transition">
+                    <svg class="w-5 h-5 fill-current" id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </button>
+                  <button onclick="playNext()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 transition">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zm9-12h2v12h-2z"/></svg>
+                  </button>
+                </div>
+
+                <!-- Volume -->
+                <div class="flex items-center space-x-2 text-xs text-slate-400 justify-center pt-2">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                  <input type="range" id="player-volume" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)" class="w-20 accent-indigo-600 h-1 rounded-lg bg-slate-200 dark:bg-zinc-700 cursor-pointer">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Tracks List -->
+          <div class="lg:col-span-2">
+            <div class="space-y-2 max-h-[60vh] overflow-y-auto pr-2" id="playlist-tracks">
+              ${audioFiles.map((track, idx) => `
+                <div onclick="selectTrack(${idx})" id="track-${idx}" class="track-item flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-slate-300 dark:hover:border-zinc-700 cursor-pointer group transition duration-200">
+                  <div class="flex items-center space-x-3 truncate">
+                    <span class="text-xs font-mono w-5 text-slate-400 font-bold text-center">${idx + 1}</span>
+                    <div class="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 group-hover:bg-indigo-500/10 group-hover:text-indigo-500 transition">
+                      ${icons.audio}
+                    </div>
+                    <div class="truncate">
+                      <p class="text-sm font-semibold truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">${track.title || track.name.replace(/\.[^/.]+$/, '')}</p>
+                      <p class="text-[10px] text-slate-400 dark:text-zinc-500 font-mono">
+                        ${track.artist ? `<span class="text-[10px] text-slate-500 dark:text-zinc-400 mr-2 font-sans font-medium">${track.artist}</span> • ` : ''}${track.extension.toUpperCase()}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-3 text-xs font-mono text-slate-400">
+                    <span>${formatBytes(track.size)}</span>
+                    <button onclick="event.stopPropagation(); downloadFile('${track.name}')" class="p-1 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Setup Player Audio Tag
+      setupAudioPlayer();
+    }
+
+    // === VIDEO VIEW ===
+    function renderVideoGrid(container, files) {
+      const videoFiles = files.filter(f => f.type === 'video');
+
+      if (videoFiles.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 border border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl">
+            <p class="text-slate-400 dark:text-zinc-500">No video files found.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          ${videoFiles.map(file => `
+            <div class="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 rounded-2xl overflow-hidden group shadow-sm hover:shadow transition flex flex-col justify-between">
+              <div class="relative aspect-video bg-black flex items-center justify-center cursor-pointer overflow-hidden" onclick="playVideo('${file.name}')">
+                <div class="absolute w-11 h-11 rounded-full bg-white/20 backdrop-blur text-white flex items-center justify-center group-hover:scale-105 group-hover:bg-indigo-600 transition duration-300 z-10 shadow">
+                  <svg class="w-5 h-5 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded text-[9px] font-bold font-mono bg-black/80 text-white backdrop-blur tracking-wider uppercase">${file.extension}</span>
+              </div>
+              <div class="p-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 class="text-sm font-bold truncate text-slate-800 dark:text-zinc-100 group-hover:text-indigo-500 cursor-pointer" onclick="playVideo('${file.name}')" title="${file.name}">${file.name.replace(/\.[^/.]+$/, '')}</h3>
+                  <p class="text-[10px] text-slate-400 dark:text-zinc-500 font-mono mt-1">${formatBytes(file.size)}</p>
+                </div>
+                <div class="flex items-center justify-between border-t border-slate-100 dark:border-zinc-800 pt-3 mt-3">
+                  <button onclick="playVideo('${file.name}')" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Play Movie</button>
+                  <button onclick="downloadFile('${file.name}')" class="p-1 rounded-lg hover:text-indigo-600 transition cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // === BOOKSHELF VIEW ===
+    function renderBookshelfGrid(container, files) {
+      const bookFiles = files.filter(f => f.type === 'epub' || ['pdf', 'epub', 'mobi', 'azw', 'azw3', 'djvu'].includes((f.extension || '').toLowerCase()));
+
+      if (bookFiles.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 border border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl">
+            <p class="text-slate-400 dark:text-zinc-500">No book files found.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+          ${bookFiles.map((file, idx) => `
+            <div class="flex flex-col justify-between group h-full">
+              <div class="relative aspect-[2/3] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 bg-slate-100 dark:bg-zinc-900">
+                ${file.cover ? `
+                  <img src="${file.cover}" class="w-full h-full object-cover rounded-xl shadow-md" alt="${file.name}" onerror="this.outerHTML=generateBookCover('${file.name.replace(/'/g, "\\'")}')" />
+                ` : generateBookCover(file.name)}
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center p-3 space-y-2">
+                  <button onclick="openFile('${file.name}')" class="w-full py-1.5 text-center text-xs font-bold bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700 transition cursor-pointer">Read</button>
+                  <button onclick="downloadFile('${file.name}')" class="w-full py-1.5 text-center text-xs font-bold bg-white text-slate-900 rounded-lg shadow-sm hover:bg-slate-100 transition cursor-pointer">Download</button>
+                </div>
+              </div>
+              <div class="mt-3">
+                <h3 class="text-xs font-bold line-clamp-2 text-slate-800 dark:text-zinc-200 group-hover:text-indigo-500 cursor-pointer" onclick="openFile('${file.name}')">${file.title || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ')}</h3>
+                ${file.artist ? `<p class="text-[10px] text-slate-500 dark:text-zinc-400 truncate mt-0.5" title="${file.artist}">${file.artist}</p>` : ''}
+                <div class="flex items-center justify-between text-[9px] font-mono text-slate-400 dark:text-zinc-500 mt-1">
+                  <span>${file.extension.toUpperCase()}</span>
+                  <span>${formatBytes(file.size)}</span>
+                </div>
+                <div class="w-full bg-slate-200 dark:bg-zinc-800 h-1 rounded-full mt-2 overflow-hidden" title="Reading tracker">
+                  <div id="read-prog-${idx}" class="bg-indigo-600 dark:bg-indigo-400 h-1 w-0 transition-all duration-500"></div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      // Restore book readings
+      setTimeout(() => {
+        bookFiles.forEach((file, idx) => {
+          let prog = '0';
+          try {
+            prog = localStorage.getItem('read-book-' + file.name) || '0';
+          } catch (e) {}
+          const bar = document.getElementById('read-prog-' + idx);
+          if (bar) bar.style.width = prog + '%';
+        });
+      }, 50);
+    }
+
+    // === IMAGE GALLERY VIEW ===
+    let imgGalleryFiles = [];
+    let imgLightboxIdx = 0;
+
+    function renderImageGallery(container, files) {
+      const imageFiles = files.filter(f => f.type === 'image');
+      imgGalleryFiles = imageFiles;
+
+      if (imageFiles.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 border border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl">
+            <p class="text-slate-400 dark:text-zinc-500">No image files found.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+          ${imageFiles.map((file, idx) => `
+            <div onclick="openImgLightbox(${idx})"
+                 class="group relative aspect-square rounded-xl overflow-hidden bg-slate-100 dark:bg-zinc-900
+                        border-2 border-transparent hover:border-indigo-500 cursor-pointer
+                        shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
+              <img src="${file.path}" alt="${file.name}"
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                   loading="lazy"
+                   onerror="this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-600 text-xs p-2 text-center\'>' + '${file.name.replace(/'/g,"\\'")}' + '</div>'" />
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200 flex items-end">
+                <div class="w-full px-2 py-1.5 translate-y-full group-hover:translate-y-0 transition-transform duration-200
+                            bg-gradient-to-t from-black/70 to-transparent">
+                  <p class="text-white text-[10px] font-medium truncate">${file.name}</p>
+                  <p class="text-white/60 text-[9px] font-mono">${file.extension.toUpperCase()} &middot; ${file.size ? formatBytes(file.size) : ''}</p>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>`;
+    }
+
+    function openImgLightbox(idx) {
+      imgLightboxIdx = idx;
+      _renderImgLightbox();
+      const lb = document.getElementById('img-lightbox');
+      lb.classList.remove('hidden');
+      lb.classList.add('flex');
+      document.addEventListener('keydown', _imgLightboxKey);
+    }
+
+    function _renderImgLightbox() {
+      const file = imgGalleryFiles[imgLightboxIdx];
+      if (!file) return;
+      document.getElementById('img-lb-img').src = file.path;
+      document.getElementById('img-lb-img').alt = file.name;
+      document.getElementById('img-lb-caption').textContent = file.name;
+      document.getElementById('img-lb-open').href = file.path;
+    }
+
+    function shiftImgLightbox(dir) {
+      imgLightboxIdx = (imgLightboxIdx + dir + imgGalleryFiles.length) % imgGalleryFiles.length;
+      _renderImgLightbox();
+    }
+
+    function closeImgLightbox() {
+      const lb = document.getElementById('img-lightbox');
+      lb.classList.add('hidden');
+      lb.classList.remove('flex');
+      document.getElementById('img-lb-img').src = '';
+      document.removeEventListener('keydown', _imgLightboxKey);
+    }
+
+    function _imgLightboxKey(e) {
+      if (e.key === 'Escape')           closeImgLightbox();
+      else if (e.key === 'ArrowRight')  shiftImgLightbox(1);
+      else if (e.key === 'ArrowLeft')   shiftImgLightbox(-1);
+    }
+
+    // === INTERACTIVE AUDIO LOGIC ===
+    function setupAudioPlayer() {
+      mainAudio = document.getElementById('main-audio');
+      if (!mainAudio) {
+        mainAudio = document.createElement('audio');
+        mainAudio.id = 'main-audio';
+        document.body.appendChild(mainAudio);
+      }
+
+      mainAudio.addEventListener('timeupdate', () => {
+        const progress = (mainAudio.currentTime / mainAudio.duration) * 100;
+        const timeline = document.getElementById('player-progress');
+        if (timeline) timeline.value = isNaN(progress) ? 0 : progress;
+        
+        const curText = document.getElementById('player-time-current');
+        if (curText) curText.textContent = formatTime(mainAudio.currentTime);
+      });
+
+      mainAudio.addEventListener('loadedmetadata', () => {
+        const durText = document.getElementById('player-time-duration');
+        if (durText) durText.textContent = formatTime(mainAudio.duration);
+      });
+
+      mainAudio.addEventListener('ended', playNext);
+
+      const timeline = document.getElementById('player-progress');
+      if (timeline) {
+        timeline.addEventListener('input', () => {
+          const time = (timeline.value / 100) * mainAudio.duration;
+          mainAudio.currentTime = time;
+        });
+      }
+
+      // Load first track details quietly
+      if (audioTracks.length > 0 && currentAudioTrackIndex === -1) {
+        selectTrack(0, false);
+      }
+    }
+
+    async function selectTrack(idx, autoPlay = true) {
+      if (idx < 0 || idx >= audioTracks.length) return;
+      
+      // Update UI selection highlights
+      audioTracks.forEach((t, i) => {
+        const item = document.getElementById('track-' + i);
+        if (item) {
+          if (i === idx) {
+            item.className = "track-item flex items-center justify-between p-3 rounded-xl border border-indigo-500 bg-indigo-50/20 dark:bg-indigo-900/10 ring-1 ring-indigo-500/20 cursor-pointer group transition duration-200";
+          } else {
+            item.className = "track-item flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-slate-300 dark:hover:border-zinc-700 cursor-pointer group transition duration-200";
+          }
+        }
+      });
+
+      currentAudioTrackIndex = idx;
+      const track = audioTracks[idx];
+
+      if (mainAudio) {
+        document.getElementById('player-title').textContent = "Loading Track...";
+        try {
+          const playableUrl = await getPlayableUrl(track);
+          mainAudio.src = playableUrl;
+          
+          let trackTitle = track.title || track.name.replace(/\.[^/.]+$/, '');
+          if (track.artist) {
+            trackTitle = trackTitle + " - " + track.artist;
+          }
+          document.getElementById('player-title').textContent = trackTitle;
+          document.getElementById('player-size').textContent = formatBytes(track.size);
+          document.getElementById('player-time-current').textContent = '0:00';
+          document.getElementById('player-progress').value = 0;
+
+          const coverContainer = document.getElementById('vinyl-cover-container');
+          if (coverContainer) {
+            if (track.cover) {
+              coverContainer.innerHTML = "<img src='" + track.cover + "' class='w-full h-full object-cover rounded-full' alt='cover' onerror='this.style.display=\"none\"' />";
+            } else {
+              coverContainer.innerHTML = "<div class='w-4 h-4 rounded-full bg-zinc-950'></div>";
+            }
+          }
+
+          if (autoPlay) {
+            playTrack();
+          }
+        } catch (e) {
+          document.getElementById('player-title').textContent = "Error loading audio";
+          console.error(e);
+        }
+      }
+    }
+
+    function togglePlay() {
+      if (isAudioPlaying) {
+        pauseTrack();
+      } else {
+        playTrack();
+      }
+    }
+
+    function playTrack() {
+      if (!mainAudio || currentAudioTrackIndex === -1) return;
+      mainAudio.play().then(() => {
+        isAudioPlaying = true;
+        document.getElementById('play-icon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+        document.getElementById('vinyl-disc')?.classList.remove('play-state-paused');
+      }).catch(err => console.log("Play failed:", err));
+    }
+
+    function pauseTrack() {
+      if (!mainAudio) return;
+      mainAudio.pause();
+      isAudioPlaying = false;
+      document.getElementById('play-icon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+      document.getElementById('vinyl-disc')?.classList.add('play-state-paused');
+    }
+
+    function playNext() {
+      let nextIdx = currentAudioTrackIndex + 1;
+      if (nextIdx >= audioTracks.length) nextIdx = 0;
+      selectTrack(nextIdx);
+    }
+
+    function playPrev() {
+      let prevIdx = currentAudioTrackIndex - 1;
+      if (prevIdx < 0) prevIdx = audioTracks.length - 1;
+      selectTrack(prevIdx);
+    }
+
+    function setVolume(val) {
+      if (mainAudio) mainAudio.volume = val;
+    }
+
+    function formatTime(secs) {
+      if (isNaN(secs)) return "0:00";
+      const m = Math.floor(secs / 60);
+      const s = Math.floor(secs % 60);
+      return m + ":" + (s < 10 ? "0" : "") + s;
+    }
+
+    // === VIDEO PLAYER LIGHTBOX ===
+    function showFallbackView(fileName, ext, playableUrl) {
+      const video = document.getElementById('modal-video');
+      const mkvView = document.getElementById('mkv-helper-view');
+      const mkvTag = document.getElementById('mkv-format-tag');
+      const mkvInput = document.getElementById('mkv-stream-url');
+      
+      if (video) {
+        video.pause();
+        video.classList.add('hidden');
+      }
+      if (mkvView) mkvView.classList.remove('hidden');
+      if (mkvTag) mkvTag.textContent = ext.toUpperCase();
+      
+      const filePathInput = document.getElementById('mkv-filepath-input');
+      const copyPathBtn = document.getElementById('mkv-copy-path-btn');
+      const directLink = document.getElementById('mkv-direct-link');
+      const relativeFileLink = document.getElementById('mkv-relative-file-link');
+      
+      if (relativeFileLink) {
+        relativeFileLink.href = playableUrl;
+        relativeFileLink.setAttribute('download', fileName);
+      }
+      
+      if (directLink) {
+        // Create an M3U playlist pointing directly to the local absolute file path with Windows CRLF line endings
+        const absolutePath = getAbsoluteSystemPath(fileName);
+        const m3uContent = "#EXTM3U\r\n#EXTINF:-1," + fileName + "\r\n" + absolutePath + "\r\n";
+        
+        try {
+          const blob = new Blob([m3uContent], { type: 'audio/x-mpegurl;charset=utf-8' });
+          const blobUrl = URL.createObjectURL(blob);
+          directLink.href = blobUrl;
+        } catch (err) {
+          const dataUrl = "data:text/plain;charset=utf-8," + encodeURIComponent(m3uContent);
+          directLink.href = dataUrl;
+        }
+        
+        directLink.setAttribute('download', fileName.replace(/.[^/.]+$/, '') + '.m3u');
+      }
+      
+      if (filePathInput) {
+        filePathInput.value = '"' + getAbsoluteSystemPath(fileName) + '"';
+      }
+      if (copyPathBtn) {
+        copyPathBtn.textContent = 'Copy';
+        copyPathBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        copyPathBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+      }
+
+      const directPlayBtn = document.getElementById('mkv-direct-play-btn');
+      if (directPlayBtn) {
+        const absolutePath = getAbsoluteSystemPath(fileName);
+        directPlayBtn.href = 'play-local://' + encodeURIComponent(absolutePath);
+      }
+      
+      // Auto show guide if not registered yet (simulate check via a local flag or keep it clean togglable)
+      const setupGuide = document.getElementById('direct-play-setup-guide');
+      const toggleBtn = document.getElementById('direct-play-setup-toggle-btn');
+      if (setupGuide && toggleBtn) {
+        setupGuide.classList.add('hidden');
+        toggleBtn.textContent = 'Show Setup Guide';
+      }
+      
+      if (mkvInput) {
+        if (playableUrl.startsWith('blob:') || playableUrl.startsWith('data:')) {
+          mkvInput.value = playableUrl;
+        } else {
+          try {
+            mkvInput.value = new URL(playableUrl, window.location.href).href;
+          } catch (err) {
+            mkvInput.value = playableUrl;
+          }
+        }
+      }
+    }
+
+    function toggleAutoLaunch(checkbox) {
+      try {
+        localStorage.setItem('auto-launch-m3u', checkbox.checked ? 'true' : 'false');
+        if (checkbox.checked) {
+          localStorage.setItem('auto-play-instant', 'false');
+          const cbInstant = document.getElementById('auto-play-instant-checkbox');
+          if (cbInstant) cbInstant.checked = false;
+        }
+      } catch (e) {}
+    }
+
+    function toggleAutoPlayInstant(checkbox) {
+      try {
+        localStorage.setItem('auto-play-instant', checkbox.checked ? 'true' : 'false');
+        if (checkbox.checked) {
+          localStorage.setItem('auto-launch-m3u', 'false');
+          const cbM3u = document.getElementById('auto-launch-checkbox');
+          if (cbM3u) cbM3u.checked = false;
+        }
+      } catch (e) {}
+    }
+
+    function toggleDirectPlaySetupHelp() {
+      const guide = document.getElementById('direct-play-setup-guide');
+      const btn = document.getElementById('direct-play-setup-toggle-btn');
+      if (guide && btn) {
+        if (guide.classList.contains('hidden')) {
+          guide.classList.remove('hidden');
+          btn.textContent = 'Hide Setup Guide';
+        } else {
+          guide.classList.add('hidden');
+          btn.textContent = 'Show Setup Guide';
+        }
+      }
+    }
+
+    function downloadDirectPlaySetup() {
+      const batLines = [
+        '@echo off',
+        ':: Direct Play Protocol Handler Installer for Windows',
+        ':: Registers play-local:// protocol to launch local media files in their default player instantly.',
+        '',
+        'echo =======================================================',
+        'echo Direct Play Protocol Handler Setup',
+        'echo =======================================================',
+        'echo.',
+        '',
+        ':: Check for Administrator privileges',
+        'net session >nul 2>&1',
+        'if %errorLevel% neq 0 (',
+        '    echo [ERROR] This setup script requires Administrator privileges to register the protocol.',
+        '    echo.',
+        '    echo Please right-click this script and select "Run as Administrator".',
+        '    echo.',
+        '    pause',
+        '    exit /b 1',
+        ')',
+        '',
+        'echo Registering play-local:// protocol handler...',
+        '',
+        ':: Create registry keys',
+        'reg add "HKCR\\play-local" /ve /t REG_SZ /d "URL:Play Local Protocol" /f',
+        'reg add "HKCR\\play-local" /v "URL Protocol" /t REG_SZ /d "" /f',
+        'reg add "HKCR\\play-local\\shell" /f',
+        'reg add "HKCR\\play-local\\shell\\open" /f',
+        'reg add "HKCR\\play-local\\shell\\open\\command" /ve /t REG_SZ /d "powershell.exe -WindowStyle Hidden -Command \\"$url = \'%%1\'; $decoded = [System.Uri]::UnescapeDataString($url); $path = $decoded.Substring(13); Start-Process $path\\" /f',
+        '',
+        'echo.',
+        'echo =======================================================',
+        'echo [SUCCESS] Direct Play protocol handler registered!',
+        'echo =======================================================',
+        'echo You can now close this window. Clicking Instant Play',
+        'echo in your web browser will launch files in your default',
+        'echo media player automatically.',
+        'echo =======================================================',
+        'echo.',
+        'pause'
+      ];
+
+      try {
+        const batContent = batLines.join('\r\n');
+        const blob = new Blob([batContent], { type: 'text/plain;charset=utf-8' });
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = 'setup-direct-play.bat';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+      } catch (e) {
+        console.error("Failed to generate setup batch script:", e);
+      }
+    }
+
+    function triggerM3uDownload(fileName) {
+      try {
+        const absolutePath = getAbsoluteSystemPath(fileName);
+        const m3uContent = "#EXTM3U\r\n#EXTINF:-1," + fileName + "\r\n" + absolutePath + "\r\n";
+        
+        let blobUrl = '';
+        try {
+          const blob = new Blob([m3uContent], { type: 'audio/x-mpegurl;charset=utf-8' });
+          blobUrl = URL.createObjectURL(blob);
+        } catch (e) {
+          blobUrl = "data:text/plain;charset=utf-8," + encodeURIComponent(m3uContent);
+        }
+        
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = fileName.replace(/.[^/.]+$/, '') + '.m3u';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        if (blobUrl.startsWith('blob:')) {
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+        }
+      } catch (e) {
+        console.error("Failed to trigger native player playlist:", e);
+      }
+    }
+
+    async function playVideo(fileName) {
+      const file = folderData.files.find(f => f.name === fileName);
+      if (!file) return;
+
+      const ext = (file.extension || '').toLowerCase();
+      const isNative = ['mp4', 'webm', 'ogg'].includes(ext);
+
+      // Check auto-launch settings
+      let autoPlayInstant = false;
+      let autoLaunch = false;
+      try {
+        autoPlayInstant = localStorage.getItem('auto-play-instant') === 'true';
+        autoLaunch = localStorage.getItem('auto-launch-m3u') === 'true';
+      } catch (e) {}
+
+      if (!isNative) {
+        if (autoPlayInstant) {
+          const absolutePath = getAbsoluteSystemPath(fileName);
+          window.location.href = 'play-local://' + encodeURIComponent(absolutePath);
+          return;
+        }
+        if (autoLaunch) {
+          triggerM3uDownload(fileName);
+        }
+      }
+
+      openVideoPlayer(fileName);
+    }
+
+    async function openVideoPlayer(fileName) {
+      const file = folderData.files.find(f => f.name === fileName);
+      if (!file) return;
+
+      activeModalFileName = fileName;
+
+      const modal = document.getElementById('video-modal');
+      const video = document.getElementById('modal-video');
+      const title = document.getElementById('modal-video-title');
+      const mkvView = document.getElementById('mkv-helper-view');
+      const mkvTag = document.getElementById('mkv-format-tag');
+      const mkvInput = document.getElementById('mkv-stream-url');
+      const copyBtn = document.getElementById('copy-stream-btn');
+      
+      if (modal && video) {
+        title.textContent = "Loading Video...";
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Reset modal components
+        if (mkvView) mkvView.classList.add('hidden');
+        video.classList.remove('hidden');
+        video.src = '';
+        if (copyBtn) copyBtn.textContent = 'Copy';
+
+        // Set auto-launch checkbox states from localStorage
+        const cb = document.getElementById('auto-launch-checkbox');
+        if (cb) {
+          try {
+            cb.checked = localStorage.getItem('auto-launch-m3u') === 'true';
+          } catch (e) {}
+        }
+        const cbInstant = document.getElementById('auto-play-instant-checkbox');
+        if (cbInstant) {
+          try {
+            cbInstant.checked = localStorage.getItem('auto-play-instant') === 'true';
+          } catch (e) {}
+        }
+        
+        const ext = (file.extension || '').toLowerCase();
+        const isNative = ['mp4', 'webm', 'ogg'].includes(ext);
+
+        try {
+          const playableUrl = await getPlayableUrl(file);
+          title.textContent = fileName.replace(/.[^/.]+$/, '');
+          
+          if (!isNative) {
+            // For MKV/AVI/etc, immediately display the external player instruction screen 
+            // without loading the <video> tag (which would show a black screen or fail)
+            showFallbackView(fileName, ext, playableUrl);
+            return;
+          }
+
+          // Clear any stale listeners
+          video.onerror = null;
+          video.onloadedmetadata = null;
+          
+          // Set up listeners BEFORE setting .src to prevent race conditions
+          video.onerror = () => {
+            console.log("Native video playback failed. Showing external player fallback.");
+            showFallbackView(fileName, ext, playableUrl);
+          };
+          
+          video.onloadedmetadata = () => {
+            // Some MKV files load metadata but have 0x0 video track (audio-only or decoding fails)
+            if (video.videoWidth === 0 || video.videoHeight === 0) {
+              console.log("Video dimensions are 0x0 (unsupported codec). Showing external player fallback.");
+              showFallbackView(fileName, ext, playableUrl);
+            }
+          };
+          
+          // Try to play natively in browser first
+          video.src = playableUrl;
+          
+          video.play().catch(e => {
+            console.log('Autoplay blocked or play failed', e);
+            if (e.name === 'NotSupportedError' || e.name === 'AbortError') {
+              showFallbackView(fileName, ext, playableUrl);
+            }
+          });
+          
+        } catch (e) {
+          title.textContent = "Error loading video";
+          console.error(e);
+        }
+      }
+    }
+
+    async function downloadActiveVideo() {
+      if (!activeModalFileName) return;
+      downloadFile(activeModalFileName);
+    }
+
+    function copyStreamUrl() {
+      const input = document.getElementById('mkv-stream-url');
+      const btn = document.getElementById('copy-stream-btn');
+      if (input) {
+        input.select();
+        navigator.clipboard.writeText(input.value).then(() => {
+          if (btn) {
+            btn.textContent = 'Copied!';
+            setTimeout(() => {
+              btn.textContent = 'Copy';
+            }, 2000);
+          }
+        }).catch(err => {
+          console.error('Failed to copy stream url', err);
+        });
+      }
+    }
+
+    function closeVideoPlayer() {
+      const modal = document.getElementById('video-modal');
+      const video = document.getElementById('modal-video');
+      const mkvView = document.getElementById('mkv-helper-view');
+      if (modal && video) {
+        video.pause();
+        video.onerror = null;
+        video.onloadedmetadata = null;
+        video.src = '';
+        if (mkvView) mkvView.classList.add('hidden');
+        video.classList.remove('hidden');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        activeModalFileName = '';
+      }
+    }
+
+    async function openActiveVideoInNewTab() {
+      if (!activeModalFileName) return;
+      const file = folderData.files.find(f => f.name === activeModalFileName);
+      if (!file) return;
+      try {
+        const playableUrl = await getPlayableUrl(file);
+        window.open(playableUrl, '_blank');
+      } catch (e) {
+        console.error("Failed to open video in new tab:", e);
+      }
+    }
+
+    // Modal click out
+    document.getElementById('video-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'video-modal') closeVideoPlayer();
+    });
+
+    // === EBOOK LAUNCHER FUNCTIONS ===
+    async function openEbook(fileName) {
+      const file = folderData.files.find(f => f.name === fileName);
+      if (!file) return;
+
+      activeModalFileName = fileName;
+
+      const ext = (file.extension || '').toLowerCase();
+      const isEbook = ['pdf', 'epub', 'mobi', 'azw', 'azw3', 'djvu'].includes(ext);
+
+      // Mark book as read
+      if (isEbook) {
+        markBookRead(fileName);
+      }
+
+      // Check auto-launch settings
+      let autoReadInstant = false;
+      try {
+        autoReadInstant = localStorage.getItem('auto-read-instant') === 'true';
+      } catch (e) {}
+
+      if (autoReadInstant) {
+        const absolutePath = getAbsoluteSystemPath(fileName);
+        window.location.href = 'play-local://' + encodeURIComponent(absolutePath);
+        return;
+      }
+
+      // Show modal
+      const modal = document.getElementById('ebook-modal');
+      const title = document.getElementById('modal-ebook-title');
+      const subtitle = document.getElementById('modal-ebook-subtitle');
+      const formatTag = document.getElementById('ebook-format-tag');
+      const directPlayBtn = document.getElementById('ebook-direct-play-btn');
+      const relFileLink = document.getElementById('ebook-relative-file-link');
+      const filePathInput = document.getElementById('ebook-filepath-input');
+      const cbInstant = document.getElementById('auto-read-instant-checkbox');
+
+      // Select dynamic elements
+      const iconContainer = document.getElementById('modal-ebook-icon-container');
+      const descText = document.getElementById('ebook-description-text');
+      const method1Title = document.getElementById('ebook-method1-title');
+      const method1Desc = document.getElementById('ebook-method1-desc');
+      const checkboxLabel = document.getElementById('ebook-auto-checkbox-label');
+      
+      const officeOnlineContainer = document.getElementById('office-online-container');
+      const officeOnlineBtn = document.getElementById('office-online-btn');
+      const googleDocsOnlineBtn = document.getElementById('google-docs-online-btn');
+      
+      const gdriveOpenContainer = document.getElementById('gdrive-open-container');
+      const gdriveOpenBtn = document.getElementById('gdrive-open-btn');
+
+      if (modal) {
+        if (title) title.textContent = fileName.replace(/.[^/.]+$/, '');
+        if (subtitle) subtitle.textContent = 'Non-Native File Format';
+        if (formatTag) formatTag.textContent = ext || 'DOC';
+
+        const absolutePath = getAbsoluteSystemPath(fileName);
+        if (directPlayBtn) {
+          directPlayBtn.href = 'play-local://' + encodeURIComponent(absolutePath);
+        }
+
+        try {
+          const playableUrl = await getPlayableUrl(file);
+          if (relFileLink) {
+            relFileLink.href = playableUrl;
+            relFileLink.setAttribute('download', fileName);
+          }
+        } catch (e) {
+          if (relFileLink) relFileLink.href = file.path;
+        }
+
+        if (filePathInput) {
+          filePathInput.value = '"' + absolutePath + '"';
+        }
+
+        if (cbInstant) {
+          try {
+            cbInstant.checked = localStorage.getItem('auto-read-instant') === 'true';
+          } catch (e) {}
+        }
+
+        // Set dynamic content based on file type / extension
+        let fileTypeLabel = 'File';
+        let defaultAppLabel = 'associated system app';
+        let appExamples = 'appropriate application';
+        let iconHtml = '<svg class="w-8 h-8 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
+
+        if (isEbook) {
+          fileTypeLabel = 'Ebook';
+          defaultAppLabel = 'default ebook reader';
+          appExamples = 'favorite reader (Calibre, Thorium, SumatraPDF, etc.)';
+          iconHtml = '<svg class="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>';
+        } else if (['xls', 'xlsx', 'ods', 'csv'].includes(ext)) {
+          fileTypeLabel = 'Spreadsheet';
+          defaultAppLabel = 'Microsoft Excel';
+          appExamples = 'spreadsheet app (Excel, LibreOffice Calc, etc.)';
+          iconHtml = '<svg class="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
+        } else if (['doc', 'docx', 'odt', 'rtf'].includes(ext)) {
+          fileTypeLabel = 'Document';
+          defaultAppLabel = 'Microsoft Word';
+          appExamples = 'word processor (Word, LibreOffice Writer, etc.)';
+          iconHtml = '<svg class="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
+        } else if (['ppt', 'pptx', 'odp', 'pps', 'ppsx'].includes(ext)) {
+          fileTypeLabel = 'Presentation';
+          defaultAppLabel = 'Microsoft PowerPoint';
+          appExamples = 'slides app (PowerPoint, Keynote, LibreOffice Impress, etc.)';
+          iconHtml = '<svg class="w-8 h-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>';
+        } else if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) {
+          fileTypeLabel = 'Archive';
+          defaultAppLabel = 'file archiver';
+          appExamples = 'unzipping app (WinRAR, 7-Zip, system explorer, etc.)';
+          iconHtml = '<svg class="w-8 h-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20" /></svg>';
+        }
+
+        // Apply dynamic content
+        if (iconContainer) {
+          iconContainer.innerHTML = iconHtml;
+        }
+
+        if (descText) {
+          descText.innerHTML = "This " + fileTypeLabel.toLowerCase() + " format (<span class='font-mono font-bold text-amber-400 uppercase'>" + (ext || "DOC") + "</span>) is not supported natively by web browsers. Since this file is on your computer, you can launch it directly in your " + appExamples + " using one of the quick options below:";
+        }
+
+        if (method1Title) {
+          method1Title.textContent = "Open Instantly in Default " + fileTypeLabel + " App";
+        }
+
+        if (method1Desc) {
+          method1Desc.textContent = "Setup once, then launch any " + fileTypeLabel.toLowerCase() + " instantly in your default system reader/app on click! Clicking 'Instant Open' will launch your app immediately.";
+        }
+
+        if (checkboxLabel) {
+          checkboxLabel.textContent = "Automatically open " + fileTypeLabel.toLowerCase() + "s instantly on click next time (Zero Clicks)";
+        }
+
+        // Handle Office Online & Google Drive Viewer options
+        if (officeOnlineContainer) {
+          officeOnlineContainer.classList.add('hidden');
+        }
+        if (gdriveOpenContainer) {
+          gdriveOpenContainer.classList.add('hidden');
+        }
+
+        // Google Drive file
+        if (file.id) {
+          if (gdriveOpenContainer) {
+            gdriveOpenContainer.classList.remove('hidden');
+            if (gdriveOpenBtn) {
+              gdriveOpenBtn.href = "https://drive.google.com/open?id=" + file.id;
+            }
+          }
+        } else {
+          // If the page is hosted online (HTTP/HTTPS) and it's an Office document, show the Microsoft / Google Doc viewer!
+          const isOffice = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'csv'].includes(ext);
+          const isOnline = window.location.protocol.startsWith('http');
+          
+          if (isOffice && isOnline && officeOnlineContainer) {
+            officeOnlineContainer.classList.remove('hidden');
+            
+            // Get full absolute hosted file URL
+            let hostedUrl = '';
+            try {
+              hostedUrl = new URL(file.path, window.location.href).href;
+            } catch (err) {
+              hostedUrl = window.location.origin + '/' + file.path;
+            }
+
+            if (officeOnlineBtn) {
+              officeOnlineBtn.href = "https://view.officeapps.live.com/op/view.aspx?src=" + encodeURIComponent(hostedUrl);
+            }
+            if (googleDocsOnlineBtn) {
+              googleDocsOnlineBtn.href = "https://docs.google.com/gview?url=" + encodeURIComponent(hostedUrl) + "&embedded=true";
+            }
+          }
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeEbookPlayer() {
+      const modal = document.getElementById('ebook-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        activeModalFileName = '';
+      }
+    }
+
+    function toggleEbookDirectPlaySetupHelp() {
+      const guide = document.getElementById('ebook-direct-play-setup-guide');
+      const btn = document.getElementById('ebook-direct-play-setup-toggle-btn');
+      if (guide && btn) {
+        const isHidden = guide.classList.contains('hidden');
+        if (isHidden) {
+          guide.classList.remove('hidden');
+          btn.textContent = 'Hide Setup Guide';
+        } else {
+          guide.classList.add('hidden');
+          btn.textContent = 'Show Setup Guide';
+        }
+      }
+    }
+
+    function toggleAutoReadInstant(checkbox) {
+      try {
+        localStorage.setItem('auto-read-instant', checkbox.checked ? 'true' : 'false');
+      } catch (e) {}
+    }
+
+    function copyEbookFilePath() {
+      const input = document.getElementById('ebook-filepath-input');
+      const btn = document.getElementById('ebook-copy-path-btn');
+      if (input) {
+        input.select();
+        navigator.clipboard.writeText(input.value).then(() => {
+          if (btn) {
+            btn.textContent = 'Copied!';
+            btn.classList.remove('bg-zinc-800', 'hover:bg-zinc-700');
+            btn.classList.add('bg-green-600', 'hover:bg-green-700');
+            setTimeout(() => {
+              btn.textContent = 'Copy';
+              btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+              btn.classList.add('bg-zinc-800', 'hover:bg-zinc-700');
+            }, 2000);
+          }
+        }).catch(err => {
+          console.error('Failed to copy file path', err);
+        });
+      }
+    }
+
+    document.getElementById('ebook-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'ebook-modal') closeEbookPlayer();
+    });
+
+    // === BOOK READING PROGRESS ===
+    function markBookRead(name) {
+      try {
+        localStorage.setItem('read-book-' + name, '100');
+      } catch (e) {}
+      renderApp();
+    }
+
+    // Initialize application on load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Restore theme
+      let savedTheme = configTheme;
+      try {
+        savedTheme = localStorage.getItem('dark-mode') || configTheme;
+      } catch (e) {
+        console.warn("localStorage is not available under file:// protocol:", e);
+      }
+      applySelectedTheme(savedTheme);
+      
+      renderApp();
+    });
+  </script>
+</body>
+</html>

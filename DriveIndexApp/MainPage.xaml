@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DriveIndexApp.MainPage"
+             Title="Drive Index"
+             BackgroundColor="{StaticResource Background}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,32,24,24" Spacing="0">
+
+            <!-- Header -->
+            <Label Text="Drive Index"
+                   FontSize="28" FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}"
+                   Margin="0,0,0,4"/>
+            <Label Text="Upload images to Google Drive and generate a browsable index."
+                   TextColor="{StaticResource TextMuted}"
+                   FontSize="13"
+                   Margin="0,0,0,32"/>
+
+            <!-- Google account -->
+            <Label Text="GOOGLE ACCOUNT" FontSize="11" FontAttributes="Bold"
+                   TextColor="{StaticResource TextMuted}" Margin="0,0,0,8"/>
+            <Button Text="{Binding ConnectButtonText}"
+                    Command="{Binding ConnectCommand}"
+                    Margin="0,0,0,8"/>
+            <Label Text="{Binding AccountLabel}"
+                   TextColor="{StaticResource TextMuted}"
+                   FontSize="12"
+                   Margin="0,0,0,24"/>
+
+            <!-- Drive folder -->
+            <Label Text="GOOGLE DRIVE FOLDER NAME" FontSize="11" FontAttributes="Bold"
+                   TextColor="{StaticResource TextMuted}" Margin="0,0,0,8"/>
+            <Entry Placeholder="e.g. My Photos 2024"
+                   Text="{Binding DriveFolderName}"
+                   Margin="0,0,0,4"/>
+            <Label Text="Folder will be created if it does not exist."
+                   TextColor="{StaticResource TextMuted}" FontSize="11"
+                   Margin="0,0,0,24"/>
+
+            <!-- Page title -->
+            <Label Text="INDEX PAGE TITLE" FontSize="11" FontAttributes="Bold"
+                   TextColor="{StaticResource TextMuted}" Margin="0,0,0,8"/>
+            <Entry Placeholder="e.g. Summer Holiday 2024"
+                   Text="{Binding PageTitle}"
+                   Margin="0,0,0,24"/>
+
+            <!-- Image picker -->
+            <Label Text="IMAGES" FontSize="11" FontAttributes="Bold"
+                   TextColor="{StaticResource TextMuted}" Margin="0,0,0,8"/>
+            <Button Text="Pick Images"
+                    Style="{StaticResource SecondaryButton}"
+                    Command="{Binding PickImagesCommand}"
+                    Margin="0,0,0,8"/>
+            <Label Text="{Binding PickedLabel}"
+                   TextColor="{StaticResource TextMuted}" FontSize="12"
+                   Margin="0,0,0,24"/>
+
+            <!-- Upload -->
+            <Button Text="⬆  Upload &amp; Generate Index"
+                    Command="{Binding UploadCommand}"
+                    IsEnabled="{Binding CanUpload}"
+                    Margin="0,0,0,16"/>
+
+            <!-- Progress -->
+            <ProgressBar Progress="{Binding Progress}"
+                         IsVisible="{Binding IsBusy}"
+                         ProgressColor="{StaticResource Primary}"
+                         Margin="0,0,0,8"/>
+            <Label Text="{Binding StatusMessage}"
+                   TextColor="{StaticResource TextMuted}"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"/>
+
+            <!-- Result link -->
+            <Button Text="Open Index in Browser"
+                    Command="{Binding OpenIndexCommand}"
+                    IsVisible="{Binding HasResult}"
+                    Style="{StaticResource SecondaryButton}"
+                    Margin="0,24,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
