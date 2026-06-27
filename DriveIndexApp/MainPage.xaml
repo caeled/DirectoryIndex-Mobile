@@ -9,10 +9,18 @@
         <VerticalStackLayout Padding="24,32,24,24" Spacing="0">
 
             <!-- Header -->
-            <Label Text="Drive Index"
-                   FontSize="28" FontAttributes="Bold"
-                   TextColor="{StaticResource Primary}"
-                   Margin="0,0,0,4"/>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,4">
+                <Label Text="Drive Index"
+                       FontSize="28" FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"/>
+                <Button Grid.Column="1"
+                        Text="?"
+                        Command="{Binding HelpCommand}"
+                        Style="{StaticResource SecondaryButton}"
+                        WidthRequest="40" HeightRequest="40"
+                        Padding="0"
+                        VerticalOptions="Center"/>
+            </Grid>
             <Label Text="Upload images to Google Drive and generate a browsable index."
                    TextColor="{StaticResource TextMuted}"
                    FontSize="13"
@@ -78,7 +86,13 @@
                     Command="{Binding OpenIndexCommand}"
                     IsVisible="{Binding HasResult}"
                     Style="{StaticResource SecondaryButton}"
-                    Margin="0,24,0,0"/>
+                    Margin="0,8,0,0"/>
+            <Label Text="Tip: choose a browser from the share sheet to view your gallery. The file is also saved in your Drive folder."
+                   IsVisible="{Binding HasResult}"
+                   TextColor="{StaticResource TextMuted}"
+                   FontSize="11"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,8,0,0"/>
 
         </VerticalStackLayout>
     </ScrollView>

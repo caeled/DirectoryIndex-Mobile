@@ -15,6 +15,7 @@ public class MainViewModel : INotifyPropertyChanged
     private string _statusMessage = "";
     private string _pickedLabel = "No images selected";
     private string _indexUrl = "";
+    private string _localIndexPath = "";
     private bool _isBusy;
     private bool _hasResult;
     private double _progress;
@@ -37,13 +38,15 @@ public class MainViewModel : INotifyPropertyChanged
     public ICommand PickImagesCommand { get; }
     public ICommand UploadCommand     { get; }
     public ICommand OpenIndexCommand  { get; }
+    public ICommand HelpCommand       { get; }
 
     public MainViewModel()
     {
         ConnectCommand    = new AsyncCommand(ConnectAsync);
         PickImagesCommand = new AsyncCommand(PickImagesAsync);
         UploadCommand     = new AsyncCommand(UploadAsync, () => CanUpload);
-        OpenIndexCommand  = new Command(() => Launcher.Default.OpenAsync(_indexUrl));
+        OpenIndexCommand  = new AsyncCommand(OpenIndexAsync);
+        HelpCommand       = new Command(ShowHelp);
     }
 
     private async Task ConnectAsync()
@@ -61,14 +64,18 @@ public class MainViewModel : INotifyPropertyChanged
         try
         {
             var email = await _drive.ConnectAsync();
-            AccountLabel = email;
-            StatusMessage = "";
-            OnPropertyChanged(nameof(ConnectButtonText));
-            OnPropertyChanged(nameof(CanUpload));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                AccountLabel = email;
+                StatusMessage = "";
+                OnPropertyChanged(nameof(ConnectButtonText));
+                OnPropertyChanged(nameof(CanUpload));
+            });
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Sign-in failed: {ex.Message}";
+            MainThread.BeginInvokeOnMainThread(() =>
+                StatusMessage = $"Sign-in failed: {ex.Message}");
         }
     }
 
@@ -117,13 +124,24 @@ public class MainViewModel : INotifyPropertyChanged
             var title = string.IsNullOrWhiteSpace(PageTitle) ? DriveFolderName : PageTitle;
             var html  = await HtmlIndexGenerator.GenerateAsync(title, uploaded);
 
-            StatusMessage = "Uploading index.html…";
+            // Save locally so we can open it directly in the browser
+            _localIndexPath = Path.Combine(FileSystem.CacheDirectory, "index.html");
+            await File.WriteAllTextAsync(_localIndexPath, html);
+
+            // Also upload to Drive as a backup copy
+            StatusMessage = "Uploading index.html to Drive…";
             using var htmlStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(html));
             _indexUrl = await _drive.UploadFileAsync(folderId, "index.html", htmlStream, "text/html");
 
             Progress = 1;
-            StatusMessage = $"Done! {uploaded.Count} images uploaded.";
             HasResult = true;
+
+            // Try to open locally in browser immediately
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                StatusMessage = $"Done! {uploaded.Count} images uploaded.";
+                OpenHtmlFile(_localIndexPath);
+            });
         }
         catch (Exception ex)
         {
@@ -133,6 +151,57 @@ public class MainViewModel : INotifyPropertyChanged
         {
             IsBusy = false;
         }
+    }
+
+    private Task OpenIndexAsync()
+    {
+        if (!string.IsNullOrEmpty(_localIndexPath) && File.Exists(_localIndexPath))
+            OpenHtmlFile(_localIndexPath);
+        else if (!string.IsNullOrEmpty(_indexUrl))
+            Launcher.Default.OpenAsync(_indexUrl);
+        return Task.CompletedTask;
+    }
+
+    private static void OpenHtmlFile(string path)
+    {
+#if ANDROID
+        try
+        {
+            var javaFile = new Java.IO.File(path);
+            var contentUri = AndroidX.Core.Content.FileProvider.GetUriForFile(
+                Android.App.Application.Context,
+                "com.stevepowell.driveindex.fileprovider",
+                javaFile);
+            var intent = new Android.Content.Intent(Android.Content.Intent.ActionView);
+            intent.SetDataAndType(contentUri, "text/html");
+            intent.AddFlags(Android.Content.ActivityFlags.GrantReadUriPermission |
+                            Android.Content.ActivityFlags.NewTask);
+            var chooser = Android.Content.Intent.CreateChooser(intent, "Open gallery with…");
+            chooser!.AddFlags(Android.Content.ActivityFlags.NewTask);
+            Android.App.Application.Context.StartActivity(chooser);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"OpenHtmlFile failed: {ex.Message}");
+        }
+#endif
+    }
+
+    private void ShowHelp()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Application.Current!.MainPage!.DisplayAlert(
+                "How to Use",
+                "1. Tap 'Connect to Google Drive' and sign in.\n\n" +
+                "2. Enter a folder name — it will be created in your Drive if it doesn't exist.\n\n" +
+                "3. Optionally enter a page title for the gallery.\n\n" +
+                "4. Tap 'Pick Images' and select the photos you want.\n\n" +
+                "5. Tap 'Upload & Generate Index' — your images are uploaded to Drive and a gallery page is created.\n\n" +
+                "6. A share sheet opens so you can open the gallery in your browser. Choose Chrome or any browser to view it.\n\n" +
+                "7. The gallery file (index.html) is also saved to your Google Drive folder as a backup — but open it locally for best results, as Drive cannot render HTML pages directly.",
+                "Got it");
+        });
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
